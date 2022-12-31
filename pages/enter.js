@@ -1,10 +1,18 @@
-import { auth, firestore, googleAuthProvider } from "../lib/firebase";
+import styles from "../styles/Enter.module.css";
+import { auth, firestore, googleAuthProvider, provider } from "../lib/firebase";
 import { doc, writeBatch, getDoc, getFirestore } from "firebase/firestore";
-import { signInWithPopup, signInAnonymously, signOut } from "firebase/auth";
+import {
+  signInWithPopup,
+  signInWithRedirect,
+  OAuthProvider,
+  signInAnonymously,
+  signOut,
+} from "firebase/auth";
 import { UserContext } from "../lib/context";
 
 import { useEffect, useState, useCallback, useContext } from "react";
 import debounce from "lodash.debounce";
+import camelCase from "lodash.camelcase";
 
 export default function Enter(props) {
   const { user, username } = useContext(UserContext);
@@ -12,7 +20,7 @@ export default function Enter(props) {
   // 2. user signed in, but missing username <UsernameForm />
   // 3. user signed in, has username <SignOutButton />
   return (
-    <main>
+    <main className={styles.enter}>
       {user ? (
         !username ? (
           <UsernameForm />
@@ -20,21 +28,36 @@ export default function Enter(props) {
           <SignOutButton />
         )
       ) : (
-        <SignInButton />
+        <>
+          <GoogleSignInButton />
+          <BaysideSignInButton />
+        </>
       )}
     </main>
   );
 }
-
 // Sign in with Google Button
-function SignInButton() {
+function GoogleSignInButton() {
   const signInWithGoogle = async () => {
-    await signInWithPopup(auth, googleAuthProvider);
+    await signInWithRedirect(auth, googleAuthProvider);
   };
   return (
     <button className="btn-google" onClick={signInWithGoogle}>
       <img src={"/google.png"} alt="Google Icon" />
       Sign in with Google
+    </button>
+  );
+}
+
+// Sign in with Bayside Button
+function BaysideSignInButton() {
+  const signInWithBayside = async () => {
+    await signInWithRedirect(auth, provider);
+  };
+  return (
+    <button className="btn-google" onClick={signInWithBayside}>
+      <img src={"/Bayside_B-01.png"} alt="Bayside Icon" />
+      Sign in with Bayside
     </button>
   );
 }
@@ -46,11 +69,17 @@ function SignOutButton() {
 
 // Pick username
 function UsernameForm() {
-  const [formValue, setFormValue] = useState("");
+  const { user, username } = useContext(UserContext);
+
+  function cleanUserDisplayName(displayName) {
+    let newDisplayName = camelCase(displayName);
+    return newDisplayName.toLowerCase();
+  }
+  const defaultDisplayName = cleanUserDisplayName(user.displayName);
+
+  const [formValue, setFormValue] = useState(defaultDisplayName);
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { user, username } = useContext(UserContext);
 
   const onSubmit = async (e) => {
     e.preventDefault();
@@ -73,7 +102,11 @@ function UsernameForm() {
 
   const onChange = (e) => {
     //Force form value typed in form to match correct format
+    console.log(`Trying`);
+
     const val = e.target.value.toLowerCase();
+    console.log(`Trying ${val}`);
+
     const re = /^(?=[a-zA-Z0-9._]{3,15}$)(?!.*[_.]{2})[^_.].*[^_.]$/;
 
     //Only set form value if Length is > 3 or it passes Regex
@@ -112,7 +145,7 @@ function UsernameForm() {
   return (
     !username && (
       <section>
-        <h3>Choose Username</h3>
+        <h3>Choose a Username</h3>
         <form onSubmit={onSubmit}>
           <input
             name="username"
@@ -128,14 +161,6 @@ function UsernameForm() {
           <button className="btn-green" type="submit" disabled={!isValid}>
             Choose
           </button>
-          <h3>Debug State</h3>
-          <div>
-            Username: {formValue}
-            <br />
-            Loading: {loading.toString()}
-            <br />
-            Username Valid: {isValid.toString()}
-          </div>
         </form>
       </section>
     )
