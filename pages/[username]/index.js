@@ -11,6 +11,7 @@ import {
 import UserProfile from "../../components/UserProfile";
 import PostFeed from "../../components/PostFeed";
 import Metatags from "../../components/Metatags";
+import Logrocket from "../../components/Logrocket";
 export async function getServerSideProps({ query }) {
   const { username } = query;
 
@@ -50,6 +51,7 @@ export default function UserProfilePage({ user, posts }) {
   return (
     <main>
       <Metatags title={`${user.username}'s posts`} />
+      <Logrocket />
       <UserProfile user={user} />
       <PostFeed posts={posts} />
     </main>

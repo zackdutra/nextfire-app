@@ -1,4 +1,6 @@
 import styles from "../../styles/Admin.module.css";
+import Metatags from "../../components/Metatags";
+import Logrocket from "../../components/Logrocket";
 import AuthCheck from "../../components/AuthCheck";
 import PostFeed from "../../components/PostFeed";
 import { UserContext } from "../../lib/context";
@@ -23,6 +25,8 @@ import toast from "react-hot-toast";
 export default function AdminPostsPage(props) {
   return (
     <main>
+      <Metatags />
+      <Logrocket />
       <AuthCheck>
         <PostList />
         <CreateNewPost />

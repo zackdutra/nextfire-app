@@ -1,17 +1,10 @@
 import Head from "next/head";
-import LogRocket from "logrocket";
-import { useContext } from "react";
-import { UserContext } from "../lib/context";
 
 export default function Metatags({
   title = "FireBlog",
   description = "A complete Next.js + Firebase Blog",
   image,
 }) {
-  const { user, username } = useContext(UserContext);
-  LogRocket.identify(username, {
-    name: username,
-  });
   return (
     <Head>
       <title>{title}</title>

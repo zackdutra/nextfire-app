@@ -1,5 +1,6 @@
 import Loader from "../components/Loader";
 import Metatags from "../components/Metatags";
+import Logrocket from "../components/Logrocket";
 import PostFeed from "../components/PostFeed";
 import { firestore, postToJSON, getIt } from "../lib/firebase";
 import {
@@ -68,6 +69,7 @@ export default function Home(props) {
   return (
     <main>
       <Metatags />
+      <Logrocket />
       <PostFeed posts={posts} />
       {!loading && !postsEnd && (
         <button onClick={getMorePosts}>Load More</button>

@@ -1,5 +1,7 @@
 import styles from "../../styles/Admin.module.css";
 import AuthCheck from "../../components/AuthCheck";
+import Logrocket from "../../components/Logrocket";
+import Metatags from "../../components/Metatags";
 import { firestore, auth } from "../../lib/firebase";
 import {
   serverTimestamp,
@@ -45,6 +47,8 @@ function PostManager() {
 
   return (
     <main className={styles.container}>
+      <Metatags />
+      <Logrocket />
       {post && (
         <>
           <section>

@@ -1,8 +1,12 @@
 import Link from "next/link";
+import Metatags from "../components/Metatags";
+import Logrocket from "../components/Logrocket";
 
 export default function Custom404() {
   return (
     <main>
+      <Metatags />
+      <Logrocket />
       <h1>404 - That page does not seem to exist...</h1>
       <iframe
         src="https://giphy.com/embed/l2JehQ2GitHGdVG9y"

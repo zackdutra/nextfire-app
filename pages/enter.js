@@ -13,6 +13,8 @@ import { UserContext } from "../lib/context";
 import { useEffect, useState, useCallback, useContext } from "react";
 import debounce from "lodash.debounce";
 import camelCase from "lodash.camelcase";
+import Metatags from "../components/Metatags";
+import Logrocket from "../components/Logrocket";
 
 export default function Enter(props) {
   const { user, username } = useContext(UserContext);
@@ -21,6 +23,8 @@ export default function Enter(props) {
   // 3. user signed in, has username <SignOutButton />
   return (
     <main className={styles.enter}>
+      <Metatags />
+      <Logrocket />
       {user ? (
         !username ? (
           <UsernameForm />
